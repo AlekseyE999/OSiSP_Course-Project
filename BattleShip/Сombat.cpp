@@ -3,7 +3,6 @@
 int Combat::shotPChit()
 {
 	int shot = 0, size = 0;
-
 	if (getPlayer(USER).getStatusPlayer() == Battle || !getPlayer(USER).getNextShot().size())   //по чьему полю бьем,поэтому USER
 	{
 		return shot = rand() % (SHIPS * SHIPS);
@@ -14,6 +13,7 @@ int Combat::shotPChit()
 		shot = getPlayer(USER).getNextShot(size - 1);
 		getPlayer(USER).getNextShot().pop_back();
 	}
+	
 	return shot;
 }
 
@@ -190,8 +190,14 @@ int Combat::Shot(HWND hWnd, int id, int player)
 	if (this->getPlayer(player).getQuantity() == 0)
 		MessageBox(0, victory, L"Результат игры:", MB_OK | MB_ICONINFORMATION);
 
-	else if (player == PC && check!=hit) this->Shot(hWnd, id, USER);	//запускаем ход компа, если ходил игрок, передавая поле игрока USER
-
+	else
+	{
+		if (player == USER && check == hit)
+		{
+			this->Shot(hWnd, id, USER);
+		}
+		if (player == PC && check!=hit) this->Shot(hWnd, id, USER);	//запускаем ход компа, если ходил игрок, передавая поле игрока USER
+	}
 	return 0;
 }
 
