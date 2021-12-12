@@ -158,12 +158,8 @@
   </ItemGroup>
   <ItemGroup>
     <Image Include="img\ICON.ico" />
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\sea.bmp" />
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\small.ico" />
     <Image Include="img\sea.bmp" />
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\seabattle.bmp" />
     <Image Include="img\small.ico" />
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\___Sea_Battle_Win32_cpp.ico" />
     <Image Include="img\bitmap1.bmp" />
   </ItemGroup>
   <ItemGroup>

@@ -19,33 +19,31 @@ int Combat::shotPChit()
 
 int Combat::Shot(HWND hWnd, int id, int player)
 {
-	TCHAR deadship[32], pipship[32], miss[32], victory[32];
+	TCHAR deadship[32], pipship[32], victory[32];
 	HBITMAP hBitmap;
-	int a = 0, b = 0, shot, key = -1;
+	int a = 0, b = 0, shot, key = -1, check=0;
 	if (player == PC)	//по чьему полю бьем, то есть ход человека
 	{
 		shot = id - ButtonBeginId - SHIPS * SHIPS;
 		wcscpy(deadship, L"Вы потопили корабль");
 		wcscpy(pipship, L"Вы ранили корабль");
-		wcscpy(miss, L"Очень жаль, но вы промахнулись");
 		wcscpy(victory, L"Поздравляем! Вы победили");
 		a = shot / 10;
 		b = shot % 10;
 		if (this->getPlayer(player).getArr(a, b) == wasstep)//такой ход был
 		{
-			//!!!	MessageBox(0, L"Сюда вы уже ходили!", L"Результат выстрела:", MB_OK | MB_ICONWARNING);
+			//MessageBox(0, L"Сюда вы уже ходили!", L"Результат выстрела:", MB_OK | MB_ICONWARNING);
 			return 0;
 		}
 	}
 
 	else      //ход компа
-	{
+	{ 
 		shot = shotPChit();
 		id = shot + ButtonBeginId;
 		wcscpy(deadship, L"Компьютер потопил Ваш корабль");
 		wcscpy(pipship, L"Компьютер ранил Ваш корабль");
-		wcscpy(miss, L"УРА! Компьютер промахнулся");
-		wcscpy(victory, L"Очень жаль, но Вы проиграли");
+		wcscpy(victory, L"Вы проиграли");
 
 		a = shot / 10;
 		b = shot % 10;
@@ -97,6 +95,7 @@ int Combat::Shot(HWND hWnd, int id, int player)
 			hBitmap = LoadBitmap(GetModuleHandle(0), MAKEINTRESOURCE(IDB_CROSS));
 			SendMessage(GetDlgItem(hWnd, id), BM_SETIMAGE, WPARAM(IMAGE_BITMAP), (LPARAM)hBitmap);
 			MessageBox(0, deadship, L"Результат выстрела:", MB_OK | MB_ICONWARNING);
+			check = hit;
 		}
 		else //попадание не в однопалубник
 		{
@@ -113,6 +112,7 @@ int Combat::Shot(HWND hWnd, int id, int player)
 				getPlayer(player).setQuantity(--this->getPlayer(player).getQuantity());
 				getPlayer(player).getShip(key).setStatus(shipDead);
 				MessageBox(0, deadship, L"Результат выстрела:", MB_OK | MB_ICONWARNING);
+				check = hit;
 			}
 			else //количество попаданий меньше размера корабля
 			{
@@ -174,7 +174,7 @@ int Combat::Shot(HWND hWnd, int id, int player)
 				getPlayer(player).getShip(key).setStatus(shipPip);
 
 				getPlayer(player).setStatusPlayer(Hit);//shot сюда засунуть можно
-
+				check = hit;
 
 
 				///!!!	MessageBox(0, pipship, L"Результат выстрела:", MB_OK | MB_ICONWARNING);
@@ -187,11 +187,10 @@ int Combat::Shot(HWND hWnd, int id, int player)
 		SendMessage(GetDlgItem(hWnd, id), BM_SETIMAGE, WPARAM(IMAGE_BITMAP), (LPARAM)hBitmap);
 		//!!!MessageBox(0, miss, L"Результат выстрела:", MB_OK | MB_ICONINFORMATION);
 	}
-
 	if (this->getPlayer(player).getQuantity() == 0)
 		MessageBox(0, victory, L"Результат игры:", MB_OK | MB_ICONINFORMATION);
 
-	else if (player == PC) this->Shot(hWnd, id, USER);	//запускаем ход компа, если ходил игрок, передавая поле игрока USER
+	else if (player == PC && check!=hit) this->Shot(hWnd, id, USER);	//запускаем ход компа, если ходил игрок, передавая поле игрока USER
 
 	return 0;
 }
@@ -261,7 +260,6 @@ void Combat::randomships(int player)
 	int v = 0, i, j, tmp_i, tmp_j, direction, key, size_ship, change_direction;
 
 	int ship = 0;//в итоге нужно разместить 10 кораблей
-
 	srand(time(NULL));
 
 	while (ship < SHIPS)
@@ -291,9 +289,7 @@ void Combat::randomships(int player)
 						for (j = tmp_j - 1; j <= tmp_j + 1; j++)
 							if (i < SHIPS && i >= 0 && j < SHIPS && j >= 0)
 								if (this->getPlayer(player).getArr(i, j)) key++;//если мы находимся в пределах поля
-													 //проверяем нет ли корабля на это месте
-													 //если корабль есть - увеличиваем счетчик.
-
+													 //проверяем нет ли корабля на это месте если корабль есть - увеличиваем счетчик.
 					if (!key)
 					{//выполняем размещение корабля только если счетчик остался 0
 						for (i = 0; i < size_ship; i++)
@@ -304,10 +300,7 @@ void Combat::randomships(int player)
 							wcscat(tmp, temp);
 							wcscat(tmp, L", ");
 						}
-						wsprintf(ttt, L"%d", size_ship);
-						wcscat(ttt, L" палубника");
 						ship++;//разместили
-					//	MessageBox(0, tmp, ttt, MB_OK);
 						break;//остановили цикл
 					}
 				}
@@ -323,7 +316,6 @@ void Combat::randomships(int player)
 						for (j = tmp_j - 1; j <= tmp_j + size_ship; j++)
 							if (i < SHIPS && i >= 0 && j < SHIPS && j >= 0)
 								if (this->getPlayer(player).getArr(i, j)) key++;
-
 					if (!key)
 					{
 
@@ -335,11 +327,8 @@ void Combat::randomships(int player)
 							wcscat(tmp, temp);
 							wcscat(tmp, L", ");
 						}
-						wsprintf(ttt, L"%d", size_ship);
-						wcscat(ttt, L" палубника");
 						ship++;
-						//		MessageBox(0, tmp, ttt, MB_OK);
-						break;//разместили остановили цикл
+						break;//разместили, остановили цикл
 					}
 				}
 				direction++;//если не разместили, изменили направление
@@ -347,9 +336,6 @@ void Combat::randomships(int player)
 			}//закрываем проверку горизонтального положения
 		}//закрываем while цикл для проверки обоих положений
 	}//закрываем while цикл размещения 10 кораблей
-	wsprintf(ttt, L"%d", v);
-	wcscat(ttt, L" VAVA");
-	//MessageBox(0, L"Число рендов", ttt, MB_OK);
 }
 
 

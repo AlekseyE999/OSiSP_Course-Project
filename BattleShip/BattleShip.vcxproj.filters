@@ -58,34 +58,13 @@
     <Image Include="img\bitmap1.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\___Sea_Battle_Win32_cpp.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
     <Image Include="img\small.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="img\clear.bmp">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="img\zero.bmp">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="img\cross.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
     <Image Include="img\sea.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\seabattle.bmp">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
     <Image Include="img\ICON.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\small.ico">
-      <Filter>Файлы ресурсов</Filter>
-    </Image>
-    <Image Include="..\..\..\Курсач2\Game-Sea-Battle-master\sea.bmp">
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
